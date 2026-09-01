@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { SPACE_LABEL, STATUS_LABEL, type SpaceKey } from "@/lib/spaces";
+import { setUserPassword } from "@/lib/admin-users.functions";
+import { PasswordField } from "@/components/admin/PasswordField";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type LevelRow = Database["public"]["Tables"]["levels"]["Row"];
