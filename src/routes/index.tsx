@@ -72,13 +72,7 @@ function StudentLogin() {
     setError(null);
     setMessage(null);
 
-    if (mode === "forgot") {
-      const { error: err } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password?space=talameed`,
-      });
-      if (err) setError(translateError(err.message));
-      else setMessage("إذا كان هذا البريد مسجّلاً، فقد أرسلنا إليه رابطاً لإعادة تعيين كلمة المرور.");
-    } else if (mode === "signup") {
+    if (mode === "signup") {
       const { error: err } = await client.auth.signUp({
         email,
         password,
