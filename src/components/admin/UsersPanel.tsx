@@ -347,6 +347,42 @@ function UserEditor({
           </div>
         </fieldset>
       ) : null}
+      <fieldset className="sm:col-span-3 rounded-2xl border border-border p-4">
+        <legend className="px-1 text-xs font-semibold text-muted-foreground">
+          تعيين كلمة مرور جديدة لهذا المستخدم
+        </legend>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="min-w-[16rem] flex-1">
+            <PasswordField
+              label="كلمة المرور الجديدة"
+              id={`new-password-${row.id}`}
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                setPwMsg(null);
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn-text"
+            disabled={pwBusy || newPassword.length < 6}
+            onClick={() => void updatePassword()}
+          >
+            {pwBusy ? "جارٍ التحديث…" : "تحديث كلمة المرور"}
+          </button>
+        </div>
+        {pwMsg ? (
+          <p
+            className={`mt-2 text-xs ${pwMsg.ok ? "text-muted-foreground" : "text-destructive"}`}
+          >
+            {pwMsg.text}
+          </p>
+        ) : (
+          <p className="mt-2 text-xs text-muted-foreground">6 أحرف على الأقل.</p>
+        )}
+      </fieldset>
       <div className="flex gap-2">
         <button type="submit" className="btn-primary" disabled={busy}>
           حفظ
