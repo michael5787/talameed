@@ -26,7 +26,7 @@ export function SpaceAuth({ space, children }: Props) {
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [ready, setReady] = useState(false);
 
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -76,7 +76,13 @@ export function SpaceAuth({ space, children }: Props) {
     setBusy(true);
     setError(null);
     setMessage(null);
-    if (mode === "signup") {
+    if (mode === "forgot") {
+      const { error: err } = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password?space=${space}`,
+      });
+      if (err) setError(translateError(err.message));
+      else setMessage("إذا كان هذا البريد مسجّلاً، فقد أرسلنا إليه رابطاً لإعادة تعيين كلمة المرور.");
+    } else if (mode === "signup") {
       const { error: err } = await client.auth.signUp({
         email,
         password,
@@ -86,7 +92,7 @@ export function SpaceAuth({ space, children }: Props) {
         },
       });
       if (err) setError(translateError(err.message));
-      else setMessage("تم إنشاء الحساب. حسابك في انتظار مصادقة المشرف العام.");
+      else setMessage("تم إنشاء الحساب. سيتم تأكيده قريباً بعد مصادقة المشرف .");
     } else {
       const { error: err } = await client.auth.signInWithPassword({ email, password });
       if (err) setError(translateError(err.message));
@@ -133,9 +139,13 @@ export function SpaceAuth({ space, children }: Props) {
   return (
     <SpaceShell space={space}>
       <h1 className="text-center text-2xl font-normal text-foreground">
-        {mode === "login" ? "تسجيل الدخول" : "إنشاء حساب"}
+        {mode === "login" ? "تسجيل الدخول" : mode === "signup" ? "إنشاء حساب" : "نسيت كلمة المرور"}
       </h1>
-      <p className="mt-2 text-center text-sm text-muted-foreground">{config.subtitle}</p>
+      <p className="mt-2 text-center text-sm text-muted-foreground">
+        {mode === "forgot"
+          ? "أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور."
+          : config.subtitle}
+      </p>
 
       <form onSubmit={submit} className="mt-8 space-y-5">
         <div className="field">
@@ -155,16 +165,18 @@ export function SpaceAuth({ space, children }: Props) {
           </label>
         </div>
 
-        <PasswordField
-          id="password"
-          name="password"
-          label="كلمة المرور"
-          required
-          minLength={6}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete={mode === "login" ? "current-password" : "new-password"}
-        />
+        {mode === "forgot" ? null : (
+          <PasswordField
+            id="password"
+            name="password"
+            label="كلمة المرور"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+          />
+        )}
 
 
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
@@ -180,10 +192,10 @@ export function SpaceAuth({ space, children }: Props) {
               setMessage(null);
             }}
           >
-            {mode === "login" ? "إنشاء حساب" : "لدي حساب بالفعل"}
+            {mode === "login" ? "إنشاء حساب" : mode === "signup" ? "لدي حساب بالفعل" : "العودة لتسجيل الدخول"}
           </button>
           <button type="submit" disabled={busy} className="btn-primary">
-            {busy ? "…" : mode === "login" ? "التالي" : "تسجيل"}
+            {busy ? "…" : mode === "login" ? "التالي" : mode === "signup" ? "تسجيل" : "إرسال الرابط"}
           </button>
         </div>
       </form>
