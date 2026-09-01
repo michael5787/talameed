@@ -51,7 +51,7 @@ function StudentLogin() {
   const navigate = useNavigate();
   const client = getSpaceClient("talameed");
 
-  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
+  const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
