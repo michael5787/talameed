@@ -232,6 +232,24 @@ function UserEditor({
   const [levelId, setLevelId] = useState(row.level_id ?? "");
   const [classId, setClassId] = useState(row.class_id ?? "");
   const [teacherClasses, setTeacherClasses] = useState<string[]>(teacherClassIds);
+  const [newPassword, setNewPassword] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const updatePasswordFn = useServerFn(setUserPassword);
+
+  const updatePassword = async () => {
+    if (newPassword.length < 6) return;
+    setPwBusy(true);
+    setPwMsg(null);
+    try {
+      await updatePasswordFn({ data: { userId: row.id, password: newPassword } });
+      setNewPassword("");
+      setPwMsg({ ok: true, text: "تم تحديث كلمة المرور." });
+    } catch {
+      setPwMsg({ ok: false, text: "تعذّر تحديث كلمة المرور. تأكد من صلاحيات المشرف العام." });
+    }
+    setPwBusy(false);
+  };
 
   const filteredClasses = levelId === "" ? classes : classes.filter((c) => c.level_id === levelId);
 
