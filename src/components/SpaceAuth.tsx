@@ -155,32 +155,17 @@ export function SpaceAuth({ space, children }: Props) {
           </label>
         </div>
 
-        {mode === "forgot" ? null : (
-          <PasswordField
-            id="password"
-            name="password"
-            label="كلمة المرور"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete={mode === "login" ? "current-password" : "new-password"}
-          />
-        )}
+        <PasswordField
+          id="password"
+          name="password"
+          label="كلمة المرور"
+          required
+          minLength={6}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete={mode === "login" ? "current-password" : "new-password"}
+        />
 
-        {mode === "login" ? (
-          <button
-            type="button"
-            className="btn-text"
-            onClick={() => {
-              setMode("forgot");
-              setError(null);
-              setMessage(null);
-            }}
-          >
-            نسيت كلمة المرور؟
-          </button>
-        ) : null}
 
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
         {message ? <p className="text-sm text-success">{message}</p> : null}
