@@ -87,12 +87,15 @@ export function SpaceAuth({ space, children }: Props) {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}${config.path}`,
+          emailRedirectTo: `${window.location.origin}/`,
           data: { space },
         },
       });
       if (err) setError(translateError(err.message));
-      else setMessage("تم إنشاء الحساب. سيتم تأكيده قريباً بعد مصادقة المشرف .");
+      else
+        setMessage(
+            "تم إنشاء الحساب. سيتم تأكيده قريباً بعد مصادقة المشرف."
+        );
     } else {
       const { error: err } = await client.auth.signInWithPassword({ email, password });
       if (err) setError(translateError(err.message));
