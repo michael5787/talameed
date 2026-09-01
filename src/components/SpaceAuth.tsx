@@ -133,13 +133,9 @@ export function SpaceAuth({ space, children }: Props) {
   return (
     <SpaceShell space={space}>
       <h1 className="text-center text-2xl font-normal text-foreground">
-        {mode === "login" ? "تسجيل الدخول" : mode === "signup" ? "إنشاء حساب" : "نسيت كلمة المرور"}
+        {mode === "login" ? "تسجيل الدخول" : "إنشاء حساب"}
       </h1>
-      <p className="mt-2 text-center text-sm text-muted-foreground">
-        {mode === "forgot"
-          ? "أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور."
-          : config.subtitle}
-      </p>
+      <p className="mt-2 text-center text-sm text-muted-foreground">{config.subtitle}</p>
 
       <form onSubmit={submit} className="mt-8 space-y-5">
         <div className="field">
